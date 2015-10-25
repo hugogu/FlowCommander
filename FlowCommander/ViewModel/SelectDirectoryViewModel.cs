@@ -1,17 +1,20 @@
-﻿using ReactiveUI;
+﻿using FlowCommander.Collections;
+using FlowCommander.Model;
+using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
-using FolderData = FlowCommander.ViewModel.MapItemsViewModel<string, string>;
+using FolderData = FlowCommander.ViewModel.MapItemsViewModel<string, FlowCommander.Model.DirectoryNode>;
 
 namespace FlowCommander.ViewModel
 {
     public class SelectDirectoryViewModel : ReactiveObject
     {
         private ObservableCollection<FolderData> _leves = new ObservableCollection<FolderData>();
+        private static IEqualityComparer<DirectoryNode> directoryNodeDisplayComparer = Utils.GetMemberEqualityComparer((DirectoryNode d) => d.Name);
 
         public SelectDirectoryViewModel()
         {
@@ -27,7 +30,11 @@ namespace FlowCommander.ViewModel
 
         protected virtual FolderData CreateFolderData(string root)
         {
+            if (!Directory.Exists(root))
+                throw new DirectoryNotFoundException(root);
+
             FolderData data = new FolderData();
+            data.DisplayValueComparer = directoryNodeDisplayComparer;
             data.GenerateItems = GetSubDirectories;
             data.OnException = HandleException;
             data.ObservableForProperty(_ => _.CurrentItem)
@@ -43,7 +50,7 @@ namespace FlowCommander.ViewModel
             int nextIndex = index + 1;
             if (vm.CurrentItem != null)
             {
-                var newRoot = Path.Combine(vm.Root, vm.CurrentItem);
+                var newRoot = Path.Combine(vm.Root, vm.CurrentItem.Name);
                 if (nextIndex < _leves.Count)
                     _leves[nextIndex].Root = newRoot;
                 else
@@ -62,16 +69,15 @@ namespace FlowCommander.ViewModel
                 _leves.RemoveAt(end);
         }
 
-        private IEnumerable<string> HandleException(FolderData vm, Exception exception)
+        private IEnumerable<DirectoryNode> HandleException(FolderData vm, Exception exception)
         {
-            return new[] { exception.Message };
+            return new[] { new DirectoryNode(vm.Root, exception.Message) };
         }
 
-        private IEnumerable<string> GetSubDirectories(string path)
+        private IEnumerable<DirectoryNode> GetSubDirectories(string path)
         {
             return from directory in Directory.EnumerateDirectories(path)
-                   let info = new DirectoryInfo(directory)
-                   select info.Name;
+                   select new DirectoryNode(path, Path.GetFileName(directory));
         }
     }
 }

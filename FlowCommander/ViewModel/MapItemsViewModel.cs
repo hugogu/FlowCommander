@@ -20,6 +20,7 @@ namespace FlowCommander.ViewModel
 
         public MapItemsViewModel()
         {
+            DisplayValueComparer = EqualityComparer<TT>.Default;
             _rootSubscriber = this
                 .ObservableForProperty(_ => _.Root)
                 .SelectMany(async rootChanged => await SelectItemsFrom(rootChanged.GetValue()))
@@ -41,6 +42,8 @@ namespace FlowCommander.ViewModel
 
         public Func<MapItemsViewModel<TS, TT>, Exception, IEnumerable<TT>> OnException { get; set; }
 
+        public IEqualityComparer<TT> DisplayValueComparer { get; set; }
+
         public TS Root
         {
             get { return _root; }
@@ -57,10 +60,7 @@ namespace FlowCommander.ViewModel
                 TT selection = CurrentItem;
                 _items.Clear();
                 _items.AddRange(value);
-                if (selection != null && value.Contains(selection))
-                {
-                    _itemsView.MoveCurrentTo(selection);
-                }
+                SetCurrentItemToSimilar(selection);
             }
         }
 
@@ -72,6 +72,18 @@ namespace FlowCommander.ViewModel
         public void Dispose()
         {
             _rootSubscriber.Dispose();
+        }
+
+        private void SetCurrentItemToSimilar(TT itemTarget)
+        {
+            foreach(var item in _items)
+            {
+                if (DisplayValueComparer.Equals(item, itemTarget))
+                {
+                    _itemsView.MoveCurrentTo(item);
+                    break;
+                }
+            }
         }
 
         private async Task<IEnumerable<TT>> SelectItemsFrom(TS root)

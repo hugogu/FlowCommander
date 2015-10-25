@@ -116,6 +116,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Collections\Utils.cs" />
+    <Compile Include="Model\DirectoryNode.cs" />
     <Compile Include="ViewModel\MapItemsViewModel.cs" />
     <Compile Include="ViewModel\SelectDirectoryViewModel.cs" />
     <Compile Include="Views\Selectors\FirstItemSpecialTemplateSelector.cs" />
@@ -169,7 +171,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Model\" />
     <Folder Include="Views\Converters\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

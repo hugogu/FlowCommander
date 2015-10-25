@@ -1,5 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:m="clr-namespace:FlowCommander.Model"
                     xmlns:vm="clr-namespace:FlowCommander.ViewModel"
                     xmlns:v="clr-namespace:FlowCommander.Views.Converters"
                     xmlns:s="clr-namespace:FlowCommander.Views.Selectors">
@@ -7,6 +8,10 @@
         <ResourceDictionary Source="CommonStyles.xaml" />
     </ResourceDictionary.MergedDictionaries>
     <s:FirstItemSpecialTemplateSelector x:Key="FirstItemSpecialTemplateSelector" />
+
+    <DataTemplate DataType="{x:Type m:DirectoryNode}">
+        <TextBlock Text="{Binding Name}" />
+    </DataTemplate>
 
     <DataTemplate x:Key="UserTypedRootMapItemsVMDataTemplate">
         <DockPanel>
