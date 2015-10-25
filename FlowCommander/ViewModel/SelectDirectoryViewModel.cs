@@ -74,7 +74,7 @@ namespace FlowCommander.ViewModel
 
         private static IEnumerable<DirectoryNode> HandleException(FolderData vm, Exception exception)
         {
-            return new[] { new DirectoryNode(vm.Root, exception.Message) };
+            return new[] { new DirectoryNode(vm.Root, exception.Message) { IsValid = false } };
         }
 
         private static IEnumerable<DirectoryNode> GetSubDirectories(string path)

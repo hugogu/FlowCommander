@@ -17,6 +17,7 @@ namespace FlowCommander.Model
 
             Root = root;
             Name = name;
+            IsValid = true;
         }
 
         public string Root { get; protected set; }
@@ -28,9 +29,14 @@ namespace FlowCommander.Model
             get { return Path.Combine(Root, Name); }
         }
 
+        public bool IsValid
+        {
+            get; set;
+        }
+
         public bool IsSymbolicLink
         {
-            get { return _isSymbolicLink ?? (_isSymbolicLink = IsSymbolic(FullPath)).Value; }
+            get { return IsValid && (_isSymbolicLink ?? (_isSymbolicLink = IsSymbolic(FullPath)).Value); }
         }
 
         public string Target

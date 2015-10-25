@@ -40,8 +40,7 @@
         </DockPanel>
     </DataTemplate>
     <DataTemplate x:Key="BoundRootMapItemsVMDataTemplate">
-        <ListBox MinWidth="50"
-                 ItemsSource="{Binding Items}"
+        <ListBox ItemsSource="{Binding Items}"
                  IsSynchronizedWithCurrentItem="True" />
     </DataTemplate>
     <DataTemplate DataType="{x:Type vm:SelectDirectoryViewModel}">
@@ -53,6 +52,12 @@
                     <StackPanel IsItemsHost="True" Orientation="Horizontal" />
                 </ItemsPanelTemplate>
             </ListBox.ItemsPanel>
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="{x:Type ListBoxItem}">
+                    <Setter Property="MinWidth" Value="50" />
+                    <Setter Property="MaxWidth" Value="200" />
+                </Style>
+            </ListBox.ItemContainerStyle>
         </ListBox>
     </DataTemplate>
 </ResourceDictionary>
