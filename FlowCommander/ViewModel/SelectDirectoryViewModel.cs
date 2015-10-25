@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Reactive.Linq;
 using FolderData = FlowCommander.ViewModel.MapItemsViewModel<string, string>;
 
@@ -42,10 +43,11 @@ namespace FlowCommander.ViewModel
             int nextIndex = index + 1;
             if (vm.CurrentItem != null)
             {
+                var newRoot = Path.Combine(vm.Root, vm.CurrentItem);
                 if (nextIndex < _leves.Count)
-                    _leves[nextIndex].Root = vm.CurrentItem;
+                    _leves[nextIndex].Root = newRoot;
                 else
-                    _leves.Add(CreateFolderData(vm.CurrentItem));
+                    _leves.Add(CreateFolderData(newRoot));
             }
             else
             {
@@ -67,7 +69,9 @@ namespace FlowCommander.ViewModel
 
         private IEnumerable<string> GetSubDirectories(string path)
         {
-            return Directory.EnumerateDirectories(path);
+            return from directory in Directory.EnumerateDirectories(path)
+                   let info = new DirectoryInfo(directory)
+                   select info.Name;
         }
     }
 }

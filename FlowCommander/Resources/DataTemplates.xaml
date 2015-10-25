@@ -6,26 +6,20 @@
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="CommonStyles.xaml" />
     </ResourceDictionary.MergedDictionaries>
-    <v:FullNameToShortNameConverter x:Key="FullNameToShortNameConverter" />
     <s:FirstItemSpecialTemplateSelector x:Key="FirstItemSpecialTemplateSelector" />
 
-    <DataTemplate x:Key="DirectoryItemDataTemplate">
-        <TextBlock Text="{Binding Converter={StaticResource FullNameToShortNameConverter}}" />
-    </DataTemplate>
     <DataTemplate x:Key="UserTypedRootMapItemsVMDataTemplate">
         <DockPanel>
             <TextBox DockPanel.Dock="Top"
                 Text="{Binding Root}" />
             <Button DockPanel.Dock="Top" Content="Load" />
             <ListBox ItemsSource="{Binding Items}"
-                     ItemTemplate="{StaticResource DirectoryItemDataTemplate}"
                      IsSynchronizedWithCurrentItem="True" />
         </DockPanel>
     </DataTemplate>
     <DataTemplate x:Key="BoundRootMapItemsVMDataTemplate">
         <ListBox MinWidth="50"
                  ItemsSource="{Binding Items}"
-                 ItemTemplate="{StaticResource DirectoryItemDataTemplate}"
                  IsSynchronizedWithCurrentItem="True" />
     </DataTemplate>
     <DataTemplate DataType="{x:Type vm:SelectDirectoryViewModel}">

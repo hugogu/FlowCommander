@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
@@ -53,8 +54,13 @@ namespace FlowCommander.ViewModel
             get { return _items; }
             protected set
             {
+                TT selection = CurrentItem;
                 _items.Clear();
                 _items.AddRange(value);
+                if (selection != null && value.Contains(selection))
+                {
+                    _itemsView.MoveCurrentTo(selection);
+                }
             }
         }
 
