@@ -34,8 +34,7 @@ namespace FlowCommander.ViewModel
             _itemsView = CollectionViewSource.GetDefaultView(_items);
             if (_itemsView.CanSort)
                 _itemsView.SortDescriptions.Add(new SortDescription(".", ListSortDirection.Ascending));
-            _itemsView.CurrentChanged += (s, e) =>
-                this.RaisePropertyChanged("CurrentItem");
+            _itemsView.CurrentChanged += OnCurrentItemChanged;
         }
 
         public Func<TS, IEnumerable<TT>> GenerateItems { get; set; }
@@ -71,7 +70,13 @@ namespace FlowCommander.ViewModel
 
         public void Dispose()
         {
+            _itemsView.CurrentChanged -= OnCurrentItemChanged;
             _rootSubscriber.Dispose();
+        }
+
+        private void OnCurrentItemChanged(object sender, EventArgs args)
+        {
+            this.RaisePropertyChanged("CurrentItem");
         }
 
         private void SetCurrentItemToSimilar(TT itemTarget)

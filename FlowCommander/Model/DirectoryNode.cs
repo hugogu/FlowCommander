@@ -1,4 +1,5 @@
-﻿using Microsoft.Practices.Unity.Utility;
+﻿using FlowCommander.IO;
+using Microsoft.Practices.Unity.Utility;
 using System;
 using System.IO;
 
@@ -7,6 +8,7 @@ namespace FlowCommander.Model
     public class DirectoryNode : IComparable<DirectoryNode>, IComparable
     {
         private bool? _isSymbolicLink = null;
+        private string _target;
 
         public DirectoryNode(string root, string name)
         {
@@ -29,6 +31,24 @@ namespace FlowCommander.Model
         public bool IsSymbolicLink
         {
             get { return _isSymbolicLink ?? (_isSymbolicLink = IsSymbolic(FullPath)).Value; }
+        }
+
+        public string Target
+        {
+            get
+            {
+                try
+                {
+                    if (IsSymbolicLink)
+                        return _target ?? (_target = SymbolicLink.GetTarget(FullPath));
+                    else
+                        return null;
+                }
+                catch (UnauthorizedAccessException ex)
+                {
+                    return ex.Message;
+                }
+            }
         }
 
         public override bool Equals(object obj)

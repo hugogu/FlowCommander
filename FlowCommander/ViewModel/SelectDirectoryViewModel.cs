@@ -33,13 +33,16 @@ namespace FlowCommander.ViewModel
             if (!Directory.Exists(root))
                 throw new DirectoryNotFoundException(root);
 
-            FolderData data = new FolderData();
-            data.DisplayValueComparer = directoryNodeDisplayComparer;
-            data.GenerateItems = GetSubDirectories;
-            data.OnException = HandleException;
+            FolderData data = new FolderData()
+            {
+                DisplayValueComparer = directoryNodeDisplayComparer,
+                GenerateItems = GetSubDirectories,
+                OnException = HandleException,
+                Root = root,
+            };
             data.ObservableForProperty(_ => _.CurrentItem)
+                .Where(change => change.GetValue() == null || change.Sender.Root == change.GetValue().Root)
                 .Subscribe(currentItem => OnSelectingCurrentItem(currentItem.Sender));
-            data.Root = root;
 
             return data;
         }
@@ -69,12 +72,12 @@ namespace FlowCommander.ViewModel
                 _leves.RemoveAt(end);
         }
 
-        private IEnumerable<DirectoryNode> HandleException(FolderData vm, Exception exception)
+        private static IEnumerable<DirectoryNode> HandleException(FolderData vm, Exception exception)
         {
             return new[] { new DirectoryNode(vm.Root, exception.Message) };
         }
 
-        private IEnumerable<DirectoryNode> GetSubDirectories(string path)
+        private static IEnumerable<DirectoryNode> GetSubDirectories(string path)
         {
             return from directory in Directory.EnumerateDirectories(path)
                    select new DirectoryNode(path, Path.GetFileName(directory));

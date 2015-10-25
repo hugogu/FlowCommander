@@ -10,7 +10,24 @@
     <s:FirstItemSpecialTemplateSelector x:Key="FirstItemSpecialTemplateSelector" />
 
     <DataTemplate DataType="{x:Type m:DirectoryNode}">
-        <TextBlock Text="{Binding Name}" />
+        <DockPanel x:Name="cell" LastChildFill="True">
+            <TextBlock Text="{Binding Name}" />
+            <TextBlock x:Name="linkage"
+                       DockPanel.Dock="Right"
+                       Text="{Binding Target}"
+                       Visibility="Collapsed" />
+            <TextBlock x:Name="linker"
+                       HorizontalAlignment="Center"
+                       Text="->"
+                       Visibility="Collapsed" />
+        </DockPanel>
+        <DataTemplate.Triggers>
+            <DataTrigger Binding="{Binding IsSymbolicLink}" Value="True">
+                <Setter TargetName="cell" Property="Background" Value="#CC6DFFBD" />
+                <Setter TargetName="linker" Property="Visibility" Value="Visible" />
+                <Setter TargetName="linkage" Property="Visibility" Value="Visible" />
+            </DataTrigger>
+        </DataTemplate.Triggers>
     </DataTemplate>
 
     <DataTemplate x:Key="UserTypedRootMapItemsVMDataTemplate">
