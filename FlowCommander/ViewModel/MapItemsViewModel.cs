@@ -46,6 +46,8 @@ namespace FlowCommander.ViewModel
             set { this.RaiseAndSetIfChanged(ref _root, value); }
         }
 
+        public bool IsSourceItem { get; set; }
+
         public IEnumerable<TT> Items
         {
             get { return _items; }
