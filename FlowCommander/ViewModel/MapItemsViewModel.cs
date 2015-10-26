@@ -3,8 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
-using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using System.Windows.Data;
@@ -21,16 +19,11 @@ namespace FlowCommander.ViewModel
         public MapItemsViewModel()
         {
             DisplayValueComparer = EqualityComparer<TT>.Default;
-            _rootSubscriber = this
-                .ObservableForProperty(_ => _.Root)
-                .SelectMany(async rootChanged => await SelectItemsFrom(rootChanged.GetValue()))
-                .Catch((Exception e) => Observable.Return(OnException(this, e)))
-                .Repeat()
-                .ObserveOn(DispatcherScheduler.Current)
-                .Subscribe(
-                    newItems => Items = newItems,
-                    exception => Items = OnException(this, exception)
-                );
+            Refresh = ReactiveCommand.CreateAsyncTask(async _ => Items = await SelectItemsFrom(Root));
+            Refresh.ThrownExceptions.Subscribe(exception => Items = OnException(this, exception));
+
+            _rootSubscriber = this.ObservableForProperty(_ => _.Root).InvokeCommand(Refresh);
+
             _itemsView = CollectionViewSource.GetDefaultView(_items);
             if (_itemsView.CanSort)
                 _itemsView.SortDescriptions.Add(new SortDescription(".", ListSortDirection.Ascending));
@@ -42,6 +35,8 @@ namespace FlowCommander.ViewModel
         public Func<MapItemsViewModel<TS, TT>, Exception, IEnumerable<TT>> OnException { get; set; }
 
         public IEqualityComparer<TT> DisplayValueComparer { get; set; }
+
+        public IReactiveCommand Refresh { get; protected set; }
 
         public TS Root
         {
@@ -65,7 +60,7 @@ namespace FlowCommander.ViewModel
 
         public TT CurrentItem
         {
-            get { return (TT)_itemsView.CurrentItem;  }
+            get { return (TT)_itemsView.CurrentItem; }
         }
 
         public void Dispose()
@@ -81,7 +76,7 @@ namespace FlowCommander.ViewModel
 
         private void SetCurrentItemToSimilar(TT itemTarget)
         {
-            foreach(var item in _items)
+            foreach (var item in _items)
             {
                 if (DisplayValueComparer.Equals(item, itemTarget))
                 {
@@ -93,17 +88,7 @@ namespace FlowCommander.ViewModel
 
         private async Task<IEnumerable<TT>> SelectItemsFrom(TS root)
         {
-            return await Task.Run(() =>
-            {
-                try
-                {
-                    return GenerateItems(root);
-                }
-                catch(Exception exception)
-                {
-                    return OnException(this, exception);
-                }
-            });
+            return await Task.Run(() => GenerateItems(root));
         }
     }
 }

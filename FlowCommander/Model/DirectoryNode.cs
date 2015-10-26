@@ -1,11 +1,12 @@
 ﻿using FlowCommander.IO;
 using Microsoft.Practices.Unity.Utility;
+using ReactiveUI;
 using System;
 using System.IO;
 
 namespace FlowCommander.Model
 {
-    public class DirectoryNode : IComparable<DirectoryNode>, IComparable
+    public class DirectoryNode : ReactiveObject, IComparable<DirectoryNode>, IComparable
     {
         private bool? _isSymbolicLink = null;
         private string _target;

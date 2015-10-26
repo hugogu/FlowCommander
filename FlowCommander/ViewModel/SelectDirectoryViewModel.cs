@@ -30,9 +30,6 @@ namespace FlowCommander.ViewModel
 
         protected virtual FolderData CreateFolderData(string root)
         {
-            if (!Directory.Exists(root))
-                throw new DirectoryNotFoundException(root);
-
             FolderData data = new FolderData()
             {
                 DisplayValueComparer = directoryNodeDisplayComparer,

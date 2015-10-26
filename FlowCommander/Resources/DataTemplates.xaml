@@ -23,7 +23,7 @@
         </DockPanel>
         <DataTemplate.Triggers>
             <DataTrigger Binding="{Binding IsSymbolicLink}" Value="True">
-                <Setter TargetName="cell" Property="Background" Value="#CC6DFFBD" />
+                <Setter TargetName="cell" Property="Background" Value="#FFD6FFF9" />
                 <Setter TargetName="linker" Property="Visibility" Value="Visible" />
                 <Setter TargetName="linkage" Property="Visibility" Value="Visible" />
             </DataTrigger>
@@ -40,8 +40,13 @@
         </DockPanel>
     </DataTemplate>
     <DataTemplate x:Key="BoundRootMapItemsVMDataTemplate">
-        <ListBox ItemsSource="{Binding Items}"
-                 IsSynchronizedWithCurrentItem="True" />
+        <DockPanel>
+            <Button Content="Refresh"
+                    Command="{Binding Refresh}"
+                    DockPanel.Dock="Top" />
+            <ListBox ItemsSource="{Binding Items}"
+                     IsSynchronizedWithCurrentItem="True" />
+        </DockPanel>
     </DataTemplate>
     <DataTemplate DataType="{x:Type vm:SelectDirectoryViewModel}">
         <ListBox ItemsSource="{Binding Levels}"
