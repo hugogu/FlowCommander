@@ -10,6 +10,7 @@ using System.Windows.Data;
 namespace FlowCommander.ViewModel
 {
     public class MapItemsViewModel<TS, TT> : ReactiveObject, IDisposable
+        where TT : INotifyPropertyChanged
     {
         private TS _root;
         private ObservableCollection<TT> _items = new ObservableCollection<TT>();
@@ -52,8 +53,16 @@ namespace FlowCommander.ViewModel
             protected set
             {
                 TT selection = CurrentItem;
+                foreach (var item in _items)
+                {
+                    item.PropertyChanged -= OnItemPropertyChanged;
+                }
                 _items.Clear();
                 _items.AddRange(value);
+                foreach (var item in _items)
+                {
+                    item.PropertyChanged += OnItemPropertyChanged;
+                }
                 SetCurrentItemToSimilar(selection);
             }
         }
@@ -89,6 +98,11 @@ namespace FlowCommander.ViewModel
         private async Task<IEnumerable<TT>> SelectItemsFrom(TS root)
         {
             return await Task.Run(() => GenerateItems(root));
+        }
+
+        private void OnItemPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            _itemsView.Refresh();
         }
     }
 }

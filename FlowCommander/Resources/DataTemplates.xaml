@@ -3,25 +3,70 @@
                     xmlns:m="clr-namespace:FlowCommander.Model"
                     xmlns:vm="clr-namespace:FlowCommander.ViewModel"
                     xmlns:v="clr-namespace:FlowCommander.Views.Converters"
-                    xmlns:s="clr-namespace:FlowCommander.Views.Selectors">
+                    xmlns:s="clr-namespace:FlowCommander.Views.Selectors"
+                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                    mc:Ignorable="d">
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="CommonStyles.xaml" />
     </ResourceDictionary.MergedDictionaries>
     <s:FirstItemSpecialTemplateSelector x:Key="FirstItemSpecialTemplateSelector" />
 
+    <Style x:Key="DirectoryItemStyle"
+           TargetType="{x:Type ListBoxItem}">
+        <Setter Property="MinWidth" Value="50" />
+        <Setter Property="MaxWidth" Value="200" />
+    </Style>
+
+    <Style x:Key="DirectoryNodeItemStyle"
+           TargetType="{x:Type ListBoxItem}">
+        <Setter Property="Padding" Value="0" />
+    </Style>
+
+    <Style x:Key="PingedToggleButtonStyle"
+           TargetType="{x:Type ToggleButton}">
+        <Setter Property="Margin" Value="0,2,5,2" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ToggleButton}">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                            BorderThickness="{TemplateBinding BorderThickness}">
+                        <ContentPresenter/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <DataTemplate DataType="{x:Type m:DirectoryNode}">
-        <DockPanel x:Name="cell" LastChildFill="True">
-            <TextBlock Text="{Binding Name}" />
+        <DockPanel x:Name="cell"
+                   LastChildFill="True">
+            <ToggleButton x:Name="pinButton"
+                          IsChecked="{Binding Pinged}"
+                          Style="{StaticResource PingedToggleButtonStyle}">
+                <Image x:Name="pinImage"
+                       Stretch="None"
+                       Source="../Images/Unpin.png" />
+            </ToggleButton>
             <TextBlock x:Name="linkage"
                        DockPanel.Dock="Right"
                        Text="{Binding Target}"
                        Visibility="Collapsed" />
             <TextBlock x:Name="linker"
-                       HorizontalAlignment="Center"
-                       Text="->"
+                       DockPanel.Dock="Right"
+                       Text="-&gt;"
                        Visibility="Collapsed" />
+            <TextBlock Text="{Binding Name}" />
         </DockPanel>
         <DataTemplate.Triggers>
+            <Trigger SourceName="pinButton" Property="IsChecked" Value="True">
+                <Setter TargetName="pinImage" Property="Source" Value="../Images/Pushpin.png" />
+            </Trigger>
             <DataTrigger Binding="{Binding IsSymbolicLink}" Value="True">
                 <Setter TargetName="cell" Property="Background" Value="#FFD6FFF9" />
                 <Setter TargetName="linker" Property="Visibility" Value="Visible" />
@@ -33,7 +78,7 @@
     <DataTemplate x:Key="UserTypedRootMapItemsVMDataTemplate">
         <DockPanel>
             <TextBox DockPanel.Dock="Top"
-                Text="{Binding Root}" />
+                     Text="{Binding Root}" />
             <Button DockPanel.Dock="Top" Content="Load" />
             <ListBox ItemsSource="{Binding Items}"
                      IsSynchronizedWithCurrentItem="True" />
@@ -45,24 +90,20 @@
                     Command="{Binding Refresh}"
                     DockPanel.Dock="Top" />
             <ListBox ItemsSource="{Binding Items}"
+                     ItemContainerStyle="{StaticResource DirectoryNodeItemStyle}"
                      IsSynchronizedWithCurrentItem="True" />
         </DockPanel>
     </DataTemplate>
     <DataTemplate DataType="{x:Type vm:SelectDirectoryViewModel}">
         <ListBox ItemsSource="{Binding Levels}"
                  ScrollViewer.VerticalScrollBarVisibility="Disabled"
-                 ItemTemplateSelector="{StaticResource FirstItemSpecialTemplateSelector}">
+                 ItemTemplateSelector="{StaticResource FirstItemSpecialTemplateSelector}"
+                 ItemContainerStyle="{StaticResource DirectoryItemStyle}">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
                     <StackPanel IsItemsHost="True" Orientation="Horizontal" />
                 </ItemsPanelTemplate>
             </ListBox.ItemsPanel>
-            <ListBox.ItemContainerStyle>
-                <Style TargetType="{x:Type ListBoxItem}">
-                    <Setter Property="MinWidth" Value="50" />
-                    <Setter Property="MaxWidth" Value="200" />
-                </Style>
-            </ListBox.ItemContainerStyle>
         </ListBox>
     </DataTemplate>
 </ResourceDictionary>

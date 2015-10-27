@@ -9,6 +9,7 @@ namespace FlowCommander.Model
     public class DirectoryNode : ReactiveObject, IComparable<DirectoryNode>, IComparable
     {
         private bool? _isSymbolicLink = null;
+        private bool _pinged;
         private string _target;
 
         public DirectoryNode(string root, string name)
@@ -24,6 +25,12 @@ namespace FlowCommander.Model
         public string Root { get; protected set; }
 
         public string Name { get; protected set; }
+
+        public bool Pinged
+        {
+            get { return _pinged; }
+            set { this.RaiseAndSetIfChanged(ref _pinged, value); }
+        }
 
         public string FullPath
         {
@@ -65,7 +72,7 @@ namespace FlowCommander.Model
 
         public override int GetHashCode()
         {
-            return Root.GetHashCode() ^ Name.GetHashCode();
+            return Root.GetHashCode() ^ Name.GetHashCode() ^ Pinged.GetHashCode();
         }
 
         public int CompareTo(DirectoryNode other)
@@ -75,6 +82,12 @@ namespace FlowCommander.Model
 
             if (other == this)
                 return 0;
+
+            int pingFirst = other.Pinged.CompareTo(this.Pinged);
+            if (pingFirst != 0)
+            {
+                return pingFirst;
+            }
 
             int value = String.Compare(Root, other.Root);
             if (value != 0)
