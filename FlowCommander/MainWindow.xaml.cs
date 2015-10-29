@@ -11,7 +11,7 @@ namespace FlowCommander
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = new SelectDirectoryViewModel();
+            DataContext = new MainWindowViewModel();
         }
     }
 }

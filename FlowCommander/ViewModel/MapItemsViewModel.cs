@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using System.Windows.Data;
@@ -85,14 +86,7 @@ namespace FlowCommander.ViewModel
 
         private void SetCurrentItemToSimilar(TT itemTarget)
         {
-            foreach (var item in _items)
-            {
-                if (DisplayValueComparer.Equals(item, itemTarget))
-                {
-                    _itemsView.MoveCurrentTo(item);
-                    break;
-                }
-            }
+            _itemsView.MoveCurrentTo(_items.FirstOrDefault(item => DisplayValueComparer.Equals(item, itemTarget)));
         }
 
         private async Task<IEnumerable<TT>> SelectItemsFrom(TS root)

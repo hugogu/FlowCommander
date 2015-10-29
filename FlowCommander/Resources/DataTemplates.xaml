@@ -1,6 +1,7 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:m="clr-namespace:FlowCommander.Model"
+                    xmlns:c="clr-namespace:FlowCommander.Commands"
                     xmlns:vm="clr-namespace:FlowCommander.ViewModel"
                     xmlns:v="clr-namespace:FlowCommander.Views.Converters"
                     xmlns:s="clr-namespace:FlowCommander.Views.Selectors"
@@ -94,6 +95,14 @@
                      IsSynchronizedWithCurrentItem="True" />
         </DockPanel>
     </DataTemplate>
+
+    <DataTemplate DataType="{x:Type c:CommandArgumentDescription}">
+        <DockPanel>
+            <TextBlock Text="{Binding Name}" />
+            <TextBox />
+        </DockPanel>
+    </DataTemplate>
+
     <DataTemplate DataType="{x:Type vm:SelectDirectoryViewModel}">
         <ListBox ItemsSource="{Binding Levels}"
                  ScrollViewer.VerticalScrollBarVisibility="Disabled"
@@ -105,5 +114,23 @@
                 </ItemsPanelTemplate>
             </ListBox.ItemsPanel>
         </ListBox>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vm:CommandsViewModel}">
+        <DockPanel>
+            <ListBox ItemsSource="{Binding Commands}"
+                     DisplayMemberPath="Name"
+                     IsSynchronizedWithCurrentItem="True" />
+            <ListBox DataContext="{Binding Commands./}"
+                     ItemsSource="{Binding Arguments}" />
+        </DockPanel>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vm:MainWindowViewModel}">
+        <DockPanel>
+            <ContentControl Content="{Binding CommandsVM}"
+                            DockPanel.Dock="Bottom" />
+            <ContentControl Content="{Binding DirectoryVM}" />
+        </DockPanel>
     </DataTemplate>
 </ResourceDictionary>

@@ -117,8 +117,14 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Collections\Utils.cs" />
+    <Compile Include="Commands\CommandArgumentDescription.cs" />
+    <Compile Include="Commands\CommandExecution.cs" />
+    <Compile Include="Commands\CreateSoftlinkCommand.cs" />
+    <Compile Include="Commands\IFlowCommand.cs" />
     <Compile Include="IO\SymbolicLink.cs" />
     <Compile Include="Model\DirectoryNode.cs" />
+    <Compile Include="ViewModel\CommandsViewModel.cs" />
+    <Compile Include="ViewModel\MainWindowViewModel.cs" />
     <Compile Include="ViewModel\MapItemsViewModel.cs" />
     <Compile Include="ViewModel\SelectDirectoryViewModel.cs" />
     <Compile Include="Views\Selectors\FirstItemSpecialTemplateSelector.cs" />
