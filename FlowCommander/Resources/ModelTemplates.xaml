@@ -13,36 +13,27 @@
         <Setter Property="Padding" Value="0" />
     </Style>
 
-    <Style x:Key="PingedToggleButtonStyle"
-           TargetType="{x:Type ToggleButton}">
-        <Setter Property="Margin" Value="0,2,5,2" />
-        <Setter Property="BorderThickness" Value="1" />
-        <Setter Property="BorderBrush" Value="Transparent" />
-        <Setter Property="Background" Value="Transparent" />
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type ToggleButton}">
-                    <Border Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
-                            BorderThickness="{TemplateBinding BorderThickness}">
-                        <ContentPresenter/>
-                    </Border>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
+    <Style x:Key="CommandMenuItemStyle"
+           TargetType="{x:Type MenuItem}">
+        <Setter Property="Header" Value="{Binding Name}" />
     </Style>
+
+    <ContextMenu x:Key="DirectoryNodeContextMenu"
+                 DataContext="{StaticResource MainWindowViewModel}">
+        <MenuItem Header="Commands"
+                  DataContext="{Binding CommandsVM}"
+                  ItemsSource="{Binding Commands}"
+                  ItemContainerStyle="{StaticResource CommandMenuItemStyle}" />
+    </ContextMenu>
 
     <DataTemplate DataType="{x:Type m:DirectoryNode}">
         <DockPanel x:Name="cell"
-                   LastChildFill="True">
+                   LastChildFill="True"
+                   Background="Transparent"
+                   ContextMenu="{StaticResource DirectoryNodeContextMenu}">
             <ToggleButton x:Name="pinButton"
                           IsChecked="{Binding Pinged}"
-                          Style="{StaticResource PingedToggleButtonStyle}">
-                <Image x:Name="pinImage"
-                       Stretch="None"
-                       Source="../Images/Unpin.png" />
-            </ToggleButton>
+                          Style="{StaticResource PingedToggleButtonStyle}" />
             <TextBlock x:Name="linkage"
                        DockPanel.Dock="Right"
                        Text="{Binding Target}"
@@ -54,9 +45,6 @@
             <TextBlock Text="{Binding Name}" />
         </DockPanel>
         <DataTemplate.Triggers>
-            <Trigger SourceName="pinButton" Property="IsChecked" Value="True">
-                <Setter TargetName="pinImage" Property="Source" Value="../Images/Pushpin.png" />
-            </Trigger>
             <DataTrigger Binding="{Binding IsSymbolicLink}" Value="True">
                 <Setter TargetName="cell" Property="Background" Value="#FFD6FFF9" />
                 <Setter TargetName="linker" Property="Visibility" Value="Visible" />

@@ -1,5 +1,4 @@
-﻿using FlowCommander.ViewModel;
-using System.Windows;
+﻿using System.Windows;
 
 namespace FlowCommander
 {
@@ -11,7 +10,6 @@ namespace FlowCommander
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = new MainWindowViewModel();
         }
     }
 }

@@ -3,4 +3,5 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         TextOptions.TextFormattingMode="Display"
         UseLayoutRounding="True"
+        DataContext="{StaticResource MainWindowViewModel}"
         Content="{Binding}" />

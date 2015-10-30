@@ -5,6 +5,7 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Resources\Data.xaml" />
                 <ResourceDictionary Source="Resources\CommonStyles.xaml" />
                 <ResourceDictionary Source="Resources\ModelTemplates.xaml" />
                 <ResourceDictionary Source="Resources\ViewModelTemplates.xaml" />

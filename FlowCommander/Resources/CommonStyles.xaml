@@ -14,4 +14,40 @@
         <Setter Property="MinWidth" Value="75" />
         <Setter Property="Margin" Value="5" />
     </Style>
+
+    <Image x:Key="PinImage"
+           x:Shared="false"
+           Stretch="None"
+           Source="../Images/Unpin.png" />
+
+    <Image x:Key="PushpinImage"
+           x:Shared="false"
+           Stretch="None"
+           Source="../Images/Pushpin.png" />
+
+    <Style x:Key="PingedToggleButtonStyle"
+           TargetType="{x:Type ToggleButton}">
+        <Setter Property="Margin" Value="0,2,5,2" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Content" Value="{StaticResource PinImage}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ToggleButton}">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                            BorderThickness="{TemplateBinding BorderThickness}">
+                        <ContentPresenter/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsChecked" Value="True">
+                <Setter Property="Content" Value="{StaticResource PushpinImage}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
 </ResourceDictionary>
