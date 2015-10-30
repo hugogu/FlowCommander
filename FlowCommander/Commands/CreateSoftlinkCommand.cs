@@ -35,7 +35,7 @@ namespace FlowCommander.Commands
             {
                 throw new NotSupportedException(String.Format("Cannot create softlink from '{0}' to '{1}'", source, target));
             }
-            return new CommandExecution { Arguments = arguments };
+            return new CommandExecution { Arguments = arguments, Command = this };
         }
 
         public IEnumerable<CommandArgumentDescription> Arguments
@@ -52,7 +52,9 @@ namespace FlowCommander.Commands
                 {
                     Name = "target",
                     Type = typeof(string),
-                    Description = "The target file or directory the softlink is referring to."
+                    Description = "The target file or directory the softlink is referring to.",
+                    DefaultValue = "systest",
+                    ValueCandidates = new[] { "fxqa", "dev", "qa", "systest", "beta" }
                 };
             }
         }

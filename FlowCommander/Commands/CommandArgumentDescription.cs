@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace FlowCommander.Commands
 {
@@ -13,5 +14,7 @@ namespace FlowCommander.Commands
         public bool IsOptional { get; internal protected set; }
 
         public object DefaultValue { get; internal protected set; }
+
+        public IEnumerable<object> ValueCandidates { get; internal protected set; }
     }
 }

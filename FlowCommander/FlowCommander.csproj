@@ -128,6 +128,7 @@
     <Compile Include="ViewModel\MapItemsViewModel.cs" />
     <Compile Include="ViewModel\SelectDirectoryViewModel.cs" />
     <Compile Include="Views\Selectors\FirstItemSpecialTemplateSelector.cs" />
+    <Compile Include="Views\Selectors\ParameterEditorTemplateSelector.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -144,7 +145,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Resources\DataTemplates.xaml">
+    <Page Include="Resources\ModelTemplates.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\ViewModelTemplates.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

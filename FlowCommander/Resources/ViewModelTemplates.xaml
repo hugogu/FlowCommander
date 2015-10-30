@@ -1,0 +1,63 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:s="clr-namespace:FlowCommander.Views.Selectors"
+                    xmlns:vm="clr-namespace:FlowCommander.ViewModel">
+    <s:FirstItemSpecialTemplateSelector x:Key="FirstItemSpecialTemplateSelector" />
+    <s:ParameterEditorTemplateSelector x:Key="ParameterEditorTemplateSelector" />
+
+    <DataTemplate x:Key="UserTypedRootMapItemsVMDataTemplate">
+        <DockPanel>
+            <TextBox DockPanel.Dock="Top"
+                     Text="{Binding Root}" />
+            <Button DockPanel.Dock="Top" Content="Load" />
+            <ListBox ItemsSource="{Binding Items}"
+                     IsSynchronizedWithCurrentItem="True" />
+        </DockPanel>
+    </DataTemplate>
+
+    <DataTemplate x:Key="BoundRootMapItemsVMDataTemplate">
+        <DockPanel>
+            <TextBox Text="{Binding Root}"
+                     IsReadOnly="True"
+                     DockPanel.Dock="Top" />
+            <Button Content="Refresh"
+                    Command="{Binding Refresh}"
+                    DockPanel.Dock="Top" />
+            <ListBox ItemsSource="{Binding Items}"
+                     ItemContainerStyle="{StaticResource DirectoryNodeItemStyle}"
+                     IsSynchronizedWithCurrentItem="True" />
+        </DockPanel>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vm:SelectDirectoryViewModel}">
+        <ListBox ItemsSource="{Binding Levels}"
+                 ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                 ItemTemplateSelector="{StaticResource FirstItemSpecialTemplateSelector}"
+                 ItemContainerStyle="{StaticResource DirectoryItemStyle}">
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel IsItemsHost="True" Orientation="Horizontal" />
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+        </ListBox>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vm:CommandsViewModel}">
+        <DockPanel>
+            <ListBox ItemsSource="{Binding Commands}"
+                     DisplayMemberPath="Name"
+                     IsSynchronizedWithCurrentItem="True" />
+            <ItemsControl DataContext="{Binding Commands./}"
+                          ItemsSource="{Binding Arguments}"
+                          ItemTemplateSelector="{StaticResource ParameterEditorTemplateSelector}" />
+        </DockPanel>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vm:MainWindowViewModel}">
+        <DockPanel>
+            <ContentControl Content="{Binding CommandsVM}"
+                            DockPanel.Dock="Bottom" />
+            <ContentControl Content="{Binding DirectoryVM}" />
+        </DockPanel>
+    </DataTemplate>
+</ResourceDictionary>
